@@ -29,6 +29,7 @@ export const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   margin-top: 32px;
+  margin-bottom: 24px;
 
   strong {
     font-size: 24px;
@@ -50,23 +51,24 @@ export const Header = styled.header`
   }
 `;
 
-export const ListContainer = styled.div`
-  margin-top: 24px;
+export const ListHeader = styled.header`
+  margin-bottom: 8px;
 
-  header {
-    margin-bottom: 8px;
+  button {
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
 
-    button {
-      background: transparent;
-      border: none;
-      display: flex;
-      align-items: center;
+    span {
+      margin-right: 8px;
+      font-weight: bold;
+      color: ${({ theme }) => theme.colors.primary.main}
+    }
 
-      span {
-        margin-right: 8px;
-        font-weight: bold;
-        color: ${({ theme }) => theme.colors.primary.main}
-      }
+    img {
+      transform: ${({ orderBy }) => (orderBy === 'asc' ? 'rotate(-180deg)' : 'rotate(0)')};
+      transition: transform 0.2s ease-in;
     }
   }
 `;
