@@ -12,7 +12,10 @@ export default function FormGroup({ children, error, isLoading }) {
 
         {isLoading && (
           <div className="loader">
-            <Spinner size={16} />
+            <Spinner
+              size={16}
+              borderSize={3}
+            />
           </div>
         )}
       </div>
