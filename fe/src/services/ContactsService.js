@@ -9,8 +9,8 @@ class ContactsService {
     return this.httpClient.get(`/contacts?orderBy=${orderBy}`);
   }
 
-  async createContact(contact = 'asc') {
-    return this.httpClient.post('/contacts', contact);
+  async createContact(contact) {
+    return this.httpClient.post('/contacts', { body: contact });
   }
 }
 
