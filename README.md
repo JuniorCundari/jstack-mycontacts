@@ -39,7 +39,7 @@ git clone https://github.com/JuniorCundari/jstack-mycontacts.git
 Lembre-se de baixar/atualizar as dependências do projeto com:
 
 ```bash
-npm
+npm i
 ```
 
 ou
@@ -47,19 +47,45 @@ ou
 ```bash
 yarn
 ```
+</br>
+
+>**Use a versão do Node.js <= 16.15.1**
+
+</br>
+
 ---
-Lembrando que este projeto foi criado usando Docker com banco de dados Postgres.</br>
-Aconselho você consultar a documentação do [Docker](https://www.docker.com/).</br>
-Mas basicamente é preciso criar uma imagem do container docker:
+Lembrando que este projeto foi criado usando [Docker](https://www.docker.com/) com banco de dados [Postgress](https://www.postgresql.org/).</br>
+Aconselho você consultar a documentação de ambos.
+
+Depois de instalar o Docker e o Postgress, é preciso criar uma imagem do container docker:
 ```bash
 docker run --name pg -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -p 5432:5432 -d postgres
 ```
 
 e em seguida:
 ```bash
-docker pg
+docker start pg
 ```
 
+Depois de instalar o Docker e criar o container, você precisa conectar com o banco de dados Postgres.
+```bash
+docker exec -it pg bash # esse comando irá executar o container de forma interativa
+```
+Dentro da bash vamos logar o Postgres:
+```bash
+psql -U root
+```
+
+Próximo passo criar:
+```bash
+CREATE DATABASE mycontacts;
+```
+
+E agora conectar o banco de dados:
+```bash
+\c mycontacts
+```
+Pronto agora o servidor pode rodar.
 ---
 ### Projeto da API
 Para rodar o projeto basta utilizar o comando.</br>
