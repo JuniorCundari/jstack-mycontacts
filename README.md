@@ -88,6 +88,7 @@ E agora conectar o banco de dados:
 
 Depois de conectar com o postgres é só copiar e colar na sequência de códigos do arquivo **schema.sql** para criar as tabelas categories e contacts. 
 Pronto agora o servidor pode rodar.
+
 ---
 ### Projeto da API
 Para rodar o projeto basta utilizar o comando.</br>
