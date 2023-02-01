@@ -13,7 +13,7 @@ export default function Button({
       disabled={disabled || isLoading}
     >
       {!isLoading && children}
-      {!isLoading && <Spinner size={16} borderSize={3} />}
+      {isLoading && <Spinner size={16} borderSize={3} />}
     </StyledButton>
   );
 }
