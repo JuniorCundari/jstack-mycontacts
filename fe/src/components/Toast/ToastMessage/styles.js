@@ -17,6 +17,7 @@ export const Container = styled.div`
   color: #fff;
   border-radius: 4px;
   box-shadow: 0px 20px 20px -16px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 
   display: flex;
   align-items: center;
