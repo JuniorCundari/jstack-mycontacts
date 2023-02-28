@@ -23,6 +23,7 @@ import emptyBox from '../../assets/images/empty-box.svg';
 
 import Loader from '../../components/Loader';
 import Button from '../../components/Button';
+import Modal from '../../components/Modal';
 
 import ContactsService from '../../services/ContactsService';
 
@@ -73,6 +74,18 @@ export default function Home() {
   return (
     <Container>
       <Loader isLoading={isLoading} />
+
+      <Modal
+        danger
+        title='Tem certeza que deseja remover o contato "Junior Cundari"?'
+        confirmLabel="Deletar"
+        onCancel={() => alert('Cancelou')}
+        onConfirm={() => alert('Confirmou')}
+      >
+        <h2>ajdajds</h2>
+        <strong>idadsjsid</strong>
+        <p>dhahdjshdjshdsa</p>
+      </Modal>
 
       {contacts.length > 0 && (
         <InputSearchContainer>
