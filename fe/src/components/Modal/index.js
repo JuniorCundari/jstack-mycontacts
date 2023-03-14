@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 
 import { Container, Footer, Overlay } from './styles';
 
 import Button from '../Button';
+import ReactPortal from '../ReactPortal';
 
 export default function Modal({
   danger,
+  visible,
+  isLoading,
   title,
   children,
   cancelLabel,
@@ -14,40 +16,49 @@ export default function Modal({
   onCancel,
   onConfirm,
 }) {
-  return ReactDOM.createPortal(
-    <Overlay>
-      <Container danger={danger}>
-        <h1>{title}</h1>
+  if (!visible) {
+    return null;
+  }
 
-        <div className="modal-body">
-          {children}
-        </div>
+  return (
+    <ReactPortal containerId="modal-root">
+      <Overlay>
+        <Container danger={danger}>
+          <h1>{title}</h1>
 
-        <Footer>
-          <button
-            type="button"
-            className="cancel-button"
-            onClick={onCancel}
-          >
-            {cancelLabel}
-          </button>
+          <div className="modal-body">
+            {children}
+          </div>
 
-          <Button
-            type="button"
-            danger={danger}
-            onClick={onConfirm}
-          >
-            {confirmLabel}
-          </Button>
-        </Footer>
-      </Container>
-    </Overlay>,
-    document.getElementById('modal-root'),
+          <Footer>
+            <button
+              type="button"
+              className="cancel-button"
+              onClick={onCancel}
+              disabled={isLoading}
+            >
+              {cancelLabel}
+            </button>
+
+            <Button
+              type="button"
+              danger={danger}
+              onClick={onConfirm}
+              isLoading={isLoading}
+            >
+              {confirmLabel}
+            </Button>
+          </Footer>
+        </Container>
+      </Overlay>
+    </ReactPortal>
   );
 }
 
 Modal.propTypes = {
   danger: PropTypes.bool,
+  visible: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool,
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   cancelLabel: PropTypes.string,
@@ -58,6 +69,7 @@ Modal.propTypes = {
 
 Modal.defaultProps = {
   danger: false,
+  isLoading: false,
   cancelLabel: 'Cancelar',
   confirmLabel: 'Confirmar',
 };
