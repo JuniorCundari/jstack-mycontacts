@@ -27,13 +27,15 @@ import Modal from '../../components/Modal';
 
 import ContactsService from '../../services/ContactsService';
 
+import useSafeAsyncState from '../../hooks/useSafeAsyncState';
+
 import toast from '../../utils/toast';
 
 export default function Home() {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useSafeAsyncState([]);
   const [orderBy, setOrderBy] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useSafeAsyncState(true);
   const [hasError, setHasError] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [contactBeingDeleted, setContactBeingDeleted] = useState(null);
@@ -56,7 +58,7 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
-  }, [orderBy]);
+  }, [orderBy, setContacts, setIsLoading]);
 
   useEffect(() => {
     loadContacts();
