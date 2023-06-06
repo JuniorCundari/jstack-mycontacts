@@ -1,19 +1,5 @@
 /* eslint-disable react/jsx-one-expression-per-line */
-/* eslint-disable no-nested-ternary */
 import { Link } from 'react-router-dom';
-import {
-  useCallback, useEffect, useMemo, useState,
-} from 'react';
-
-import {
-  Container,
-  InputSearchContainer,
-  Header,
-  ListHeader,
-  Card,
-  ErrorContainer,
-  EmptyListContainer,
-} from './styles';
 
 import arrow from '../../assets/images/icons/arrow.svg';
 import edit from '../../assets/images/icons/edit.svg';
@@ -25,140 +11,54 @@ import Loader from '../../components/Loader';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 
-import ContactsService from '../../services/ContactsService';
+import InputSearch from './components/InputSearch';
+import Header from './components/Header';
 
-import useSafeAsyncState from '../../hooks/useSafeAsyncState';
+import useHome from './useHome';
 
-import toast from '../../utils/toast';
+import {
+  Container,
+  ListHeader,
+  Card,
+  ErrorContainer,
+  EmptyListContainer,
+} from './styles';
 
 export default function Home() {
-  const [contacts, setContacts] = useSafeAsyncState([]);
-  const [orderBy, setOrderBy] = useState('asc');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useSafeAsyncState(true);
-  const [hasError, setHasError] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [contactBeingDeleted, setContactBeingDeleted] = useState(null);
-  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
-
-  const filteredContacts = useMemo(() => contacts.filter((contact) => (
-    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )), [contacts, searchTerm]);
-
-  const loadContacts = useCallback(async () => {
-    try {
-      setIsLoading(true);
-
-      const contactsList = await ContactsService.listContacts(orderBy);
-
-      setHasError(false);
-      setContacts(contactsList);
-    } catch {
-      setHasError(true);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [orderBy, setContacts, setIsLoading]);
-
-  useEffect(() => {
-    loadContacts();
-  }, [loadContacts]);
-
-  function handleToggleOrderBy() {
-    setOrderBy(
-      (prevState) => (prevState === 'asc' ? 'desc' : 'asc'),
-    );
-  }
-
-  function handleChangeSearchTerm(event) {
-    setSearchTerm(event.target.value);
-  }
-
-  function handleTryAgain() {
-    loadContacts();
-  }
-
-  function handleDeleteContact(contact) {
-    setContactBeingDeleted(contact);
-    setIsDeleteModalVisible(true);
-  }
-
-  function handleCloseDeleteModal() {
-    setIsDeleteModalVisible(false);
-    setContactBeingDeleted(null);
-  }
-
-  async function handleConfirmDeleteContact() {
-    try {
-      setIsLoadingDelete(true);
-
-      await ContactsService.deleteContact(contactBeingDeleted.id);
-
-      setContacts((prevState) => prevState.filter(
-        (contact) => contact.id !== contactBeingDeleted.id,
-      ));
-      handleCloseDeleteModal();
-
-      toast({
-        type: 'success',
-        text: 'Contato deletado com sucesso!',
-      });
-    } catch {
-      toast({
-        type: 'danger',
-        text: 'Ocorreu um erro ao deletar o contato!',
-      });
-    } finally {
-      setIsLoadingDelete(false);
-    }
-  }
+  const {
+    isLoading,
+    isDeleteModalVisible,
+    isLoadingDelete,
+    contactBeingDeleted,
+    handleCloseDeleteModal,
+    handleConfirmDeleteContact,
+    contacts,
+    searchTerm,
+    handleChangeSearchTerm,
+    hasError,
+    filteredContacts,
+    handleTryAgain,
+    orderBy,
+    handleToggleOrderBy,
+    handleDeleteContact,
+  } = useHome();
 
   return (
     <Container>
       <Loader isLoading={isLoading} />
 
-      <Modal
-        danger
-        visible={isDeleteModalVisible}
-        isLoading={isLoadingDelete}
-        title={`Tem certeza que deseja remover o contato "${contactBeingDeleted?.name}"?`}
-        confirmLabel="Deletar"
-        onCancel={handleCloseDeleteModal}
-        onConfirm={handleConfirmDeleteContact}
-      >
-        <p>Esta ação não poderá ser desfeita!</p>
-      </Modal>
-
       {contacts.length > 0 && (
-        <InputSearchContainer>
-          <input
-            value={searchTerm}
-            type="text"
-            placeholder="Pesquisar contato"
-            onChange={handleChangeSearchTerm}
-          />
-        </InputSearchContainer>
+        <InputSearch
+          value={searchTerm}
+          onChange={handleChangeSearchTerm}
+        />
       )}
 
       <Header
-        justifyContent={
-          hasError
-            ? 'flex-end'
-            : (
-              contacts.length > 0
-                ? 'space-between'
-                : 'center'
-            )
-        }
-      >
-        {(!hasError && contacts.length > 0) && (
-          <strong>
-            {filteredContacts.length}
-            {filteredContacts.length === 1 ? ' contato' : ' contatos'}
-          </strong>
-        )}
-        <Link to="/new">Novo contato</Link>
-      </Header>
+        hasError={hasError}
+        qtyOfContacts={contacts.length}
+        qtyOfFilteredContacts={filteredContacts.length}
+      />
 
       {hasError && (
         <ErrorContainer>
@@ -221,6 +121,18 @@ export default function Home() {
               </div>
             </Card>
           ))}
+
+          <Modal
+            danger
+            visible={isDeleteModalVisible}
+            isLoading={isLoadingDelete}
+            title={`Tem certeza que deseja remover o contato "${contactBeingDeleted?.name}"?`}
+            confirmLabel="Deletar"
+            onCancel={handleCloseDeleteModal}
+            onConfirm={handleConfirmDeleteContact}
+          >
+            <p>Esta ação não poderá ser desfeita!</p>
+          </Modal>
         </>
       )}
     </Container>
